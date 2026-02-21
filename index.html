@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Blog Educativo - El Factorial</title>
+
+<style>
+body{
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(to bottom, #a8e6ff, #ffffff);
+    margin:0;
+    padding:0;
+}
+
+header{
+    background:#ff9800;
+    color:white;
+    text-align:center;
+    padding:25px;
+    font-size:35px;
+}
+
+section{
+    padding:25px;
+    margin:20px;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+h2{
+    color:#ff5722;
+}
+
+.personajes{
+    text-align:center;
+}
+
+.personajes img{
+    width:140px;
+    margin:10px;
+    animation: flotar 3s infinite;
+}
+
+.ejemplo{
+    background:#fff3cd;
+    padding:15px;
+    border-radius:15px;
+    font-size:20px;
+}
+
+.calculadora{
+    background:#c8f7c5;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+}
+
+input{
+    padding:10px;
+    font-size:18px;
+    width:120px;
+    text-align:center;
+}
+
+button{
+    padding:10px 20px;
+    font-size:18px;
+    background:#673ab7;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin:5px;
+}
+
+button:hover{
+    background:#512da8;
+}
+
+.resultado{
+    margin-top:15px;
+    font-size:18px;
+    font-weight:bold;
+    color:#2e7d32;
+}
+
+.correcto{ color:green; }
+.incorrecto{ color:red; }
+
+@keyframes flotar{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+    100%{transform:translateY(0);}
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    background:#673ab7;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+🌟 ¡Aprendamos el Factorial! 🎉
+</header>
+
+<section class="personajes">
+<img src="https://cdn-icons-png.flaticon.com/512/1998/1998610.png">
+<img src="https://cdn-icons-png.flaticon.com/512/1998/1998627.png">
+<p>👦 ¡Descubramos cómo funciona el factorial! 👧</p>
+</section>
+
+<section>
+<h2>📘 ¿Qué es el factorial?</h2>
+
+<p id="definicion">
+Esta operación matemática tiene un amplio uso en diferentes áreas,
+especialmente en probabilidad. Se define el factorial de un número, denotado
+como n!, como el producto de todos los enteros positivos menores o iguales a n.
+El factorial de un número es la multiplicación de todos los enteros positivos desde
+uno hasta el propio número. 
+
+</p>
+
+<button onclick="leerDefinicion()">🔊 Escuchar definición</button>
+
+<p style="font-size:22px; text-align:center;">
+n! = n × (n-1) × (n-2) × ... × 2 × 1
+
+</p>
+
+<div class="ejemplo">
+Ejemplo:  
+4! = 4 × 3 × 2 × 1 = 24
+</div>
+
+</section>
+
+<section>
+<h2>🧠 ¿Por qué 0! = 1?</h2>
+
+<div class="ejemplo">
+Por definición matemática:  
+0! = 1
+</div>
+
+<p>
+Se define así para que las fórmulas de combinatoria funcionen correctamente.
+Por ejemplo, en las combinaciones:
+</p>
+<button onclick="leerCeroFactorial()">🔊 Escuchar explicación de 0!</button>
+
+<p style="text-align:center; font-size:20px;"> 
+</p>
+
+<p>
+Si 0! no fuera 1, muchas fórmulas dejarían de funcionar.
+Además, el factorial representa formas de ordenar elementos.
+Si no tenemos elementos (cero objetos), solo existe una forma de no ordenar nada.
+</p>
+
+</section>
+
+<section class="calculadora">
+<h2>🧮 Calculadora Paso a Paso</h2>
+
+<p>Escribe un número entero positivo:</p>
+
+<input type="number" id="numero" min="0">
+<br><br>
+<button onclick="calcularFactorial()">Calcular</button>
+
+<div class="resultado" id="resultado"></div>
+</section>
+
+<section>
+<h2>✏️ Ejercicios</h2>
+
+<p>1️⃣ ¿Cuánto vale 5!?</p>
+<input type="number" id="ej1">
+<button onclick="verificar1()">Verificar</button>
+<div id="r1"></div>
+
+<br><br>
+
+<p>2️⃣ ¿Cuánto vale 3!?</p>
+<input type="number" id="ej2">
+<button onclick="verificar2()">Verificar</button>
+<div id="r2"></div>
+
+<br><br>
+
+<p>3️⃣ ¿Cuánto vale 0!?</p>
+<input type="number" id="ej3">
+<button onclick="verificar3()">Verificar</button>
+<div id="r3"></div>
+
+</section>
+
+<footer>
+Blog Educativo ✏️ | Licenciatura en Matemáticas
+</footer>
+
+<script>
+
+function calcularFactorial() {
+    let n = parseInt(document.getElementById("numero").value);
+    let resultadoDiv = document.getElementById("resultado");
+
+    if (isNaN(n) || n < 0) {
+        resultadoDiv.innerHTML = "⚠️ Ingresa un número entero positivo.";
+        return;
+    }
+
+    if (n === 0) {
+        resultadoDiv.innerHTML = "0! = 1";
+        return;
+    }
+
+    let factorial = 1;
+    let procedimiento = n + "! = ";
+
+    for (let i = n; i >= 1; i--) {
+        factorial *= i;
+        procedimiento += i;
+        if (i > 1) procedimiento += " × ";
+    }
+
+    procedimiento += " = " + factorial;
+
+    resultadoDiv.innerHTML = procedimiento;
+}
+
+
+// 🎤 VOZ MASCULINA ESPAÑOL COLOMBIA
+function leerDefinicion() {
+
+    let texto = document.getElementById("definicion").innerText;
+
+    // Corregir pronunciación
+    texto = texto.replace(/factorial/gi, "factoriál");
+
+    hablar(texto);
+}
+
+
+function leerCeroFactorial() {
+
+    let texto = `
+    Cero factoriál es igual a uno.
+    Se define así para que las fórmulas matemáticas funcionen correctamente.
+    Si no tenemos elementos para ordenar, existe exactamente una forma de no ordenar nada.
+    `;
+
+    hablar(texto);
+}
+
+
+function hablar(texto) {
+
+    let mensaje = new SpeechSynthesisUtterance(texto);
+
+    let voces = speechSynthesis.getVoices();
+    let vozSeleccionada = null;
+
+    // Buscar voz español Colombia
+    for (let i = 0; i < voces.length; i++) {
+        if (voces[i].lang === "es-CO") {
+            vozSeleccionada = voces[i];
+            break;
+        }
+    }
+
+    // Si no encuentra es-CO, usar cualquier español
+    if (!vozSeleccionada) {
+        for (let i = 0; i < voces.length; i++) {
+            if (voces[i].lang.includes("es")) {
+                vozSeleccionada = voces[i];
+                break;
+            }
+        }
+    }
+
+    mensaje.voice = vozSeleccionada;
+    mensaje.lang = "es-CO";
+
+    // Configuración voz masculina juvenil
+    mensaje.rate = 1.05;
+    mensaje.pitch = 1.1;
+
+    speechSynthesis.speak(mensaje);
+}
+
+
+// ✅ Verificación ejercicios
+function verificar1(){
+    let valor = document.getElementById("ej1").value;
+    document.getElementById("r1").innerHTML =
+        valor == 120 ? "<span class='correcto'>✔ Correcto 🎉</span>"
+        : "<span class='incorrecto'>❌ Incorrecto</span>";
+}
+
+function verificar2(){
+    let valor = document.getElementById("ej2").value;
+    document.getElementById("r2").innerHTML =
+        valor == 6 ? "<span class='correcto'>✔ Correcto 🎉</span>"
+        : "<span class='incorrecto'>❌ Incorrecto</span>";
+}
+
+function verificar3(){
+    let valor = document.getElementById("ej3").value;
+    document.getElementById("r3").innerHTML =
+        valor == 1 ? "<span class='correcto'>✔ Correcto 🎉</span>"
+        : "<span class='incorrecto'>❌ Incorrecto</span>";
+}
+
+</script>
+
+</body>
+</html>
