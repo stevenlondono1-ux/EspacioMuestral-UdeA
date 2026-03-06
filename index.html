@@ -30,7 +30,7 @@
             width: 95%;
             max-width: 700px;
             background: white;
-            padding: 20px 30px 30px; /* Reducido padding superior */
+            padding: 20px 30px 30px;
             border-radius: 30px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             text-align: center;
@@ -40,7 +40,7 @@
         /* Imagen superior centrada más compacta */
         .top-header-image {
             text-align: center;
-            margin-bottom: 10px; /* Reducido */
+            margin-bottom: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -48,28 +48,25 @@
             flex-wrap: wrap;
         }
         .top-header-image img {
-            max-width: 70px;  /* Reducido */
+            max-width: 70px;
             height: auto;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,168,232,0.3);
             animation: float 3s ease-in-out infinite;
         }
         .top-header-image img:first-child {
-            max-width: 100px; /* Escudo un poco más grande pero sin exceso */
+            max-width: 100px;
         }
 
-        /* Títulos más compactos */
         h1 { font-size: 1.7rem; margin: 5px 0 5px; }
         h2 { font-size: 1.4rem; margin: 5px 0 10px; }
 
-        /* Animación de flote para imágenes */
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-5px); }
             100% { transform: translateY(0px); }
         }
 
-        /* Movimiento sutil para las tarjetas de personajes */
         .option-card img {
             transition: transform 0.3s ease;
             animation: littleMove 4s infinite alternate;
@@ -79,9 +76,8 @@
             to { transform: rotate(1deg) scale(1.03); }
         }
 
-        /* Personajes principales más pequeños y centrados */
         .character-img {
-            max-width: 150px;  /* Antes 250px */
+            max-width: 150px;
             width: auto;
             height: auto;
             margin: 5px auto 10px;
@@ -135,7 +131,7 @@
             background: var(--pocoyo-blue);
             color: white;
             border: none;
-            padding: 8px 20px; /* Botones más compactos */
+            padding: 8px 20px;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
@@ -206,7 +202,6 @@
             font-size: 0.9rem;
         }
 
-        /* Ajuste de párrafos */
         p { margin: 10px 0; font-size: 0.95rem; }
     </style>
 </head>
@@ -223,7 +218,7 @@
     <h1>Módulo Para Orientar Probabilidad</h1>
     <h2 style="color: var(--pocoyo-blue);">Espacio Muestral</h2>
 
-    <!-- Reproductor de audio (solo primera página) -->
+    <!-- Reproductor de audio con tu archivo (solo primera página) -->
     <div id="audioPanel" class="audio-control-panel">
         <button id="playPauseBtn" title="Reproducir/Pausar definición">▶️</button>
         <span>📢 Definición</span>
@@ -233,7 +228,6 @@
 
     <!-- Página 0: Inicio -->
     <div id="page-0" class="page active">
-        <!-- Pocoyó más pequeño y centrado -->
         <img src="https://www.seekpng.com/png/full/174-1742532_pocoyo-png.png" alt="Pocoyo" class="character-img" style="max-width: 140px;">
         <h2>¿Qué es el Espacio Muestral?</h2>
         <p style="text-align: justify;">El espacio muestral (también llamado espacio de muestreo) es el conjunto de todos los posibles resultados de un experimento aleatorio. Es considerado un elemento clave en el estudio de la probabilidad, ya que sobre este conjunto se definen los eventos y se calculan todas las probabilidades.
@@ -263,91 +257,81 @@ Por lo general se denota por la letra griega Ω (omega mayúscula) sin embargo t
     </div>
 </div>
 
-<!-- Sonidos efecto -->
+<!-- AUDIOS: Efectos y tu definición -->
 <audio id="snd-ok" src="https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3"></audio>
 <audio id="snd-no" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
+<audio id="audioDefinicion" src="https://github.com/stevenlondono1-ux/audio-espacio-muestral/raw/main/WhatsApp%20Audio%202026-03-06%20at%2012.39.18%20PM.mp4"></audio>
 
 <script>
-    // Definición para audio
-    const definitionText = `El espacio muestral (también llamado espacio de muestreo) es el conjunto de todos los posibles resultados de un experimento aleatorio. Es considerado un elemento clave en el estudio de la probabilidad, ya que sobre este conjunto se definen los eventos y se calculan todas las probabilidades. Por lo general se denota por la letra griega Ω (omega mayúscula) sin embargo también puede ser representado como E, S y U, cada elemento dentro de este conjunto representa un posible resultado del experimento evaluado. Por ejemplo: Pocoyó y sus amigos meten varios juguetes en una caja: un carro, un oso, una pelota y un robot. Luego sacan uno sin mirar. Los posibles resultados son: S = {carro, oso, pelota, robot}. ¡Esa lista completa es el Espacio Muestral!.`;
-
-    let utterance;
-    if ('speechSynthesis' in window) {
-        utterance = new SpeechSynthesisUtterance(definitionText);
-        utterance.lang = 'es-ES';
-        utterance.rate = 0.9;
-        utterance.pitch = 1.1;
-        utterance.volume = 0.7;
-    }
-
-    // Controles de audio
+    // --- CONTROL DE AUDIO PERSONALIZADO (tu archivo) ---
+    const audioDef = document.getElementById('audioDefinicion');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const volumeSlider = document.getElementById('volumeSlider');
     const muteBtn = document.getElementById('muteBtn');
     const audioPanel = document.getElementById('audioPanel');
+
     let isPlaying = false;
     let isMuted = false;
     let previousVolume = 0.7;
 
-    if (utterance) {
-        utterance.onend = function() {
-            isPlaying = false;
-            playPauseBtn.textContent = '▶️';
-        };
-    }
+    // Configurar volumen inicial
+    audioDef.volume = previousVolume;
 
+    // Evento cuando termina el audio
+    audioDef.addEventListener('ended', () => {
+        isPlaying = false;
+        playPauseBtn.textContent = '▶️';
+    });
+
+    // Reproducir/Pausar
     playPauseBtn.addEventListener('click', () => {
-        if (!window.speechSynthesis) return;
         if (isPlaying) {
-            window.speechSynthesis.cancel();
+            audioDef.pause();
             isPlaying = false;
             playPauseBtn.textContent = '▶️';
         } else {
-            const newUtterance = new SpeechSynthesisUtterance(definitionText);
-            newUtterance.lang = 'es-ES';
-            newUtterance.rate = 0.9;
-            newUtterance.pitch = 1.1;
-            newUtterance.volume = utterance.volume;
-            newUtterance.onend = () => {
-                isPlaying = false;
-                playPauseBtn.textContent = '▶️';
-            };
-            window.speechSynthesis.cancel();
-            window.speechSynthesis.speak(newUtterance);
-            utterance = newUtterance;
-            isPlaying = true;
-            playPauseBtn.textContent = '⏸️';
+            // Asegurar que empiece desde el principio si se quiere replay manual
+            // (opcional, si se quiere que al pausar y reanudar continúe, no se modifica currentTime)
+            audioDef.play()
+                .then(() => {
+                    isPlaying = true;
+                    playPauseBtn.textContent = '⏸️';
+                })
+                .catch(e => console.log("Error al reproducir:", e));
         }
     });
 
+    // Control de volumen
     volumeSlider.addEventListener('input', (e) => {
         const vol = parseFloat(e.target.value);
-        if (utterance) utterance.volume = vol;
+        audioDef.volume = vol;
         if (!isMuted) previousVolume = vol;
         muteBtn.textContent = vol === 0 ? '🔇' : (vol < 0.5 ? '🔈' : '🔊');
     });
 
+    // Silenciar/Activar sonido
     muteBtn.addEventListener('click', () => {
-        if (!utterance) return;
         if (isMuted) {
-            utterance.volume = previousVolume;
+            audioDef.volume = previousVolume;
             volumeSlider.value = previousVolume;
             muteBtn.textContent = previousVolume === 0 ? '🔇' : (previousVolume < 0.5 ? '🔈' : '🔊');
             isMuted = false;
         } else {
-            previousVolume = utterance.volume;
-            utterance.volume = 0;
+            previousVolume = audioDef.volume;
+            audioDef.volume = 0;
             volumeSlider.value = 0;
             muteBtn.textContent = '🔇';
             isMuted = true;
         }
     });
 
-    // Función ir a inicio
+    // Función para ir a inicio
     window.goToHome = function() {
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        audioDef.pause();
+        audioDef.currentTime = 0; // Reiniciar al inicio
         isPlaying = false;
         playPauseBtn.textContent = '▶️';
+        
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById('page-0').classList.add('active');
         current = 0;
@@ -358,20 +342,23 @@ Por lo general se denota por la letra griega Ω (omega mayúscula) sin embargo t
         toggleAudioPanel(0);
     };
 
+    // Control de visibilidad del panel de audio (solo en página 0)
     function toggleAudioPanel(pageIndex) {
         if (pageIndex === 0) {
             audioPanel.classList.add('visible');
         } else {
             audioPanel.classList.remove('visible');
-            if (isPlaying && window.speechSynthesis) {
-                window.speechSynthesis.cancel();
+            // Si se está reproduciendo, detener al salir de la página 0
+            if (isPlaying) {
+                audioDef.pause();
+                audioDef.currentTime = 0; // Opcional: reiniciar
                 isPlaying = false;
                 playPauseBtn.textContent = '▶️';
             }
         }
     }
 
-    // Imágenes personajes
+    // ---------- DATOS (sin cambios, exactamente igual) ----------
     const imgElly = "https://cdn.prod.website-files.com/662fb92f905585b61b12afd8/66632b8a61d0ffd9308dd729_characters_elly.webp";
     const imgNina = "https://i0.wp.com/eltallerdehector.com/wp-content/uploads/2022/06/8440a-nina-pocoyo-png.png?resize=800%2C800&ssl=1";
     const imgPato = "https://i0.wp.com/eltallerdehector.com/wp-content/uploads/2022/06/3797e-pato-de-pocoyo-png.png?fit=1000%2C1000&ssl=1";
@@ -488,9 +475,6 @@ Por lo general se denota por la letra griega Ω (omega mayúscula) sin embargo t
             else document.body.style.backgroundColor = "#fff";
             toggleAudioPanel(-1);
         }
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
-        isPlaying = false;
-        playPauseBtn.textContent = '▶️';
         window.scrollTo(0,0);
         update();
     }
