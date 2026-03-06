@@ -1,326 +1,511 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Blog Educativo - El Factorial</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo para Orientar Probabilidad - Espacio Muestral</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pocoyo-blue: #00a8e8;
+            --elly-pink: #ff91af;
+            --pato-yellow: #fdd835;
+            --text-color: #2c3e50;
+        }
 
-<style>
-body{
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    background: linear-gradient(to bottom, #a8e6ff, #ffffff);
-    margin:0;
-    padding:0;
-}
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.5s ease;
+            color: var(--text-color);
+            background-color: #f0f9ff;
+        }
 
-header{
-    background:#ff9800;
-    color:white;
-    text-align:center;
-    padding:25px;
-    font-size:35px;
-}
+        #blog-container {
+            width: 95%;
+            max-width: 700px;
+            background: white;
+            padding: 20px 30px 30px; /* Reducido padding superior */
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+        }
 
-section{
-    padding:25px;
-    margin:20px;
-    background:white;
-    border-radius:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
+        /* Imagen superior centrada más compacta */
+        .top-header-image {
+            text-align: center;
+            margin-bottom: 10px; /* Reducido */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .top-header-image img {
+            max-width: 70px;  /* Reducido */
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,168,232,0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+        .top-header-image img:first-child {
+            max-width: 100px; /* Escudo un poco más grande pero sin exceso */
+        }
 
-h2{
-    color:#ff5722;
-}
+        /* Títulos más compactos */
+        h1 { font-size: 1.7rem; margin: 5px 0 5px; }
+        h2 { font-size: 1.4rem; margin: 5px 0 10px; }
 
-.personajes{
-    text-align:center;
-}
+        /* Animación de flote para imágenes */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
 
-.personajes img{
-    width:140px;
-    margin:10px;
-    animation: flotar 3s infinite;
-}
+        /* Movimiento sutil para las tarjetas de personajes */
+        .option-card img {
+            transition: transform 0.3s ease;
+            animation: littleMove 4s infinite alternate;
+        }
+        @keyframes littleMove {
+            from { transform: rotate(-1deg) scale(1); }
+            to { transform: rotate(1deg) scale(1.03); }
+        }
 
-.ejemplo{
-    background:#fff3cd;
-    padding:15px;
-    border-radius:15px;
-    font-size:20px;
-}
+        /* Personajes principales más pequeños y centrados */
+        .character-img {
+            max-width: 150px;  /* Antes 250px */
+            width: auto;
+            height: auto;
+            margin: 5px auto 10px;
+            display: block;
+            transition: transform 0.5s;
+            animation: float 4s ease-in-out infinite;
+        }
 
-.calculadora{
-    background:#c8f7c5;
-    padding:20px;
-    border-radius:15px;
-    text-align:center;
-}
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.4s; }
 
-input{
-    padding:10px;
-    font-size:18px;
-    width:120px;
-    text-align:center;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-button{
-    padding:10px 20px;
-    font-size:18px;
-    background:#673ab7;
-    color:white;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    margin:5px;
-}
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
 
-button:hover{
-    background:#512da8;
-}
+        .option-card {
+            border: 3px solid #eee;
+            border-radius: 15px;
+            padding: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            min-height: 120px;
+        }
 
-.resultado{
-    margin-top:15px;
-    font-size:18px;
-    font-weight:bold;
-    color:#2e7d32;
-}
+        .option-card:hover { transform: scale(1.02); border-color: var(--pocoyo-blue); }
+        .option-card img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 8px; }
 
-.correcto{ color:green; }
-.incorrecto{ color:red; }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
 
-@keyframes flotar{
-    0%{transform:translateY(0);}
-    50%{transform:translateY(-10px);}
-    100%{transform:translateY(0);}
-}
+        .btn {
+            background: var(--pocoyo-blue);
+            color: white;
+            border: none;
+            padding: 8px 20px; /* Botones más compactos */
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn:hover { transform: scale(1.02); filter: brightness(0.95); }
+        .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
 
-footer{
-    text-align:center;
-    padding:20px;
-    background:#673ab7;
-    color:white;
-}
-</style>
+        .btn-home {
+            background: var(--pato-yellow);
+            color: var(--text-color);
+        }
+
+        /* Panel de audio más compacto */
+        .audio-control-panel {
+            background: #f8f9fa;
+            border-radius: 40px;
+            padding: 8px 15px;
+            margin: 10px 0 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            border: 2px solid var(--pocoyo-blue);
+        }
+        .audio-control-panel.visible {
+            display: flex;
+        }
+        .audio-control-panel button {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 30px;
+            background: var(--pocoyo-blue);
+            color: white;
+            font-weight: bold;
+        }
+        .audio-control-panel span {
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        .audio-control-panel input[type="range"] {
+            width: 140px;
+            cursor: pointer;
+        }
+
+        .feedback-box {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            display: none;
+            text-align: left;
+            border: 2px solid transparent;
+            font-size: 0.9rem;
+        }
+
+        .lesson-box {
+            background: #e1f5fe;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: left;
+            border: 2px dashed var(--pocoyo-blue);
+            font-size: 0.9rem;
+        }
+
+        /* Ajuste de párrafos */
+        p { margin: 10px 0; font-size: 0.95rem; }
+    </style>
 </head>
-
 <body>
 
-<header>
- ¡Aprendamos el Factorial! 
-</header>
+<div id="blog-container">
+    <!-- Imagen superior centrada más pequeña -->
+    <div class="top-header-image">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png" alt="Escudo Universidad de Antioquia" onerror="this.onerror=null; this.src='https://i.imgur.com/kH2Y7ZT.png'; this.alt='Escudo UdeA (copia)'">
+        <img src="https://cdn.prod.website-files.com/662fb92f905585b61b12afd8/66605d28b75b0f6ac8d1c633_pocoyo-friends.webp" alt="Amigos Pocoyó" style="max-width:100px;">
+    </div>
 
-<section class="personajes">
-<img src="https://cdn-icons-png.flaticon.com/512/1998/1998610.png">
-<img src="https://cdn-icons-png.flaticon.com/512/1998/1998627.png">
-<p>👦 ¡Descubramos cómo funciona el factorial! 👧</p>
-</section>
+    <!-- Título y subtítulo -->
+    <h1>Módulo Para Orientar Probabilidad</h1>
+    <h2 style="color: var(--pocoyo-blue);">Espacio Muestral</h2>
 
-<section>
-<h2> ¿Qué es el factorial?</h2>
+    <!-- Reproductor de audio (solo primera página) -->
+    <div id="audioPanel" class="audio-control-panel">
+        <button id="playPauseBtn" title="Reproducir/Pausar definición">▶️</button>
+        <span>📢 Definición</span>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.7">
+        <button id="muteBtn" title="Silenciar">🔊</button>
+    </div>
 
-<p id="definicion">
-Esta operación matemática tiene un amplio uso en diferentes áreas,
-especialmente en probabilidad. Se define el factorial de un número, denotado
-como n!, como el producto de todos los enteros positivos menores o iguales a n.
-El factorial de un número es la multiplicación de todos los enteros positivos desde
-uno hasta el propio número. 
+    <!-- Página 0: Inicio -->
+    <div id="page-0" class="page active">
+        <!-- Pocoyó más pequeño y centrado -->
+        <img src="https://www.seekpng.com/png/full/174-1742532_pocoyo-png.png" alt="Pocoyo" class="character-img" style="max-width: 140px;">
+        <h2>¿Qué es el Espacio Muestral?</h2>
+        <p style="text-align: justify;">El espacio muestral (también llamado espacio de muestreo) es el conjunto de todos los posibles resultados de un experimento aleatorio. Es considerado un elemento clave en el estudio de la probabilidad, ya que sobre este conjunto se definen los eventos y se calculan todas las probabilidades.
+Por lo general se denota por la letra griega Ω (omega mayúscula) sin embargo también puede ser representado como E, S y U, cada elemento dentro de este conjunto representa un posible resultado del experimento evaluado. <b>S</b> Por ejemplo: Pocoyó y sus amigos meten varios juguetes en una caja: un carro, un oso, una pelota y un robot. Luego sacan uno sin mirar. Los posibles resultados son: S = {carro, oso, pelota, robot}. <br><br>¡Esa lista completa es el Espacio Muestral!.</p>
+        <div class="lesson-box">
+            <b>Ejemplo:</b> Si tú lanzas una moneda:<br>
+            <b>El espacio muestral de este seria  S = {Cara, Sello}</b> <br>
+            ¡No puede salir nada más!
+        </div>
+    </div>
 
-</p>
+    <div id="exercises-container"></div>
 
-<button onclick="leerDefinicion()">🔊 Escuchar definición</button>
+    <!-- Página final -->
+    <div id="page-final" class="page">
+        <h1>¡MUCHAS GRACIAS!</h1>
+        <img src="https://cdn.prod.website-files.com/662fb92f905585b61b12afd8/66605d28b75b0f6ac8d1c633_pocoyo-friends.webp" alt="Amigos de Pocoyó" class="character-img" style="max-width: 350px; border-radius: 20px;">
+        <h2 style="color: var(--pocoyo-blue); margin-top: 15px;">¡Ahora ya sabes qué es el espacio muestral!</h2>
+        <p>Has completado todos los retos con éxito. ¡Eres un genio de la probabilidad!</p>
+        <button class="btn" onclick="location.reload()">Reiniciar Aventura</button>
+    </div>
 
-<p style="font-size:22px; text-align:center;">
-n! = n × (n-1) × (n-2) × ... × 2 × 1
-
-</p>
-
-<div class="ejemplo">
-Ejemplo:  
-4! = 4 × 3 × 2 × 1 = 24
+    <div class="nav-buttons" id="nav-area">
+        <button id="prevBtn" class="btn" style="background:var(--elly-pink)" onclick="changePage(-1)">⬅ Atrás</button>
+        <button id="homeBtn" class="btn btn-home" onclick="goToHome()">🏠 Inicio</button>
+        <button id="nextBtn" class="btn" onclick="changePage(1)">¡Empezar! ➡</button>
+    </div>
 </div>
 
-</section>
-
-<section>
-<h2> ¿Por qué 0! = 1?</h2>
-
-<div class="ejemplo">
-Por definición matemática:  
-0! = 1
-</div>
-
-<p>
-Se define así para que las fórmulas de combinatoria funcionen correctamente.
-Por ejemplo, en las combinaciones:
-</p>
-<button onclick="leerCeroFactorial()">🔊 Escuchar explicación de 0!</button>
-
-<p style="text-align:center; font-size:20px;"> 
-</p>
-
-<p>
-Si 0! no fuera 1, muchas fórmulas dejarían de funcionar.
-Además, el factorial representa formas de ordenar elementos.
-Si no tenemos elementos (cero objetos), solo existe una forma de no ordenar nada.
-</p>
-
-</section>
-
-<section class="calculadora">
-<h2>🧮 Calculadora Paso a Paso</h2>
-
-<p>Escribe un número entero positivo:</p>
-
-<input type="number" id="numero" min="0">
-<br><br>
-<button onclick="calcularFactorial()">Calcular</button>
-
-<div class="resultado" id="resultado"></div>
-</section>
-
-<section>
-<h2>✏️ Ejercicios</h2>
-
-<p>1️⃣ ¿Cuánto vale 5!?</p>
-<input type="number" id="ej1">
-<button onclick="verificar1()">Verificar</button>
-<div id="r1"></div>
-
-<br><br>
-
-<p>2️⃣ ¿Cuánto vale 3!?</p>
-<input type="number" id="ej2">
-<button onclick="verificar2()">Verificar</button>
-<div id="r2"></div>
-
-<br><br>
-
-<p>3️⃣ ¿Cuánto vale 0!?</p>
-<input type="number" id="ej3">
-<button onclick="verificar3()">Verificar</button>
-<div id="r3"></div>
-
-</section>
-
-<footer>
-Blog Educativo ✏️ | Licenciatura en Matemáticas
-</footer>
+<!-- Sonidos efecto -->
+<audio id="snd-ok" src="https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3"></audio>
+<audio id="snd-no" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
 
 <script>
+    // Definición para audio
+    const definitionText = `El espacio muestral (también llamado espacio de muestreo) es el conjunto de todos los posibles resultados de un experimento aleatorio. Es considerado un elemento clave en el estudio de la probabilidad, ya que sobre este conjunto se definen los eventos y se calculan todas las probabilidades. Por lo general se denota por la letra griega Ω (omega mayúscula) sin embargo también puede ser representado como E, S y U, cada elemento dentro de este conjunto representa un posible resultado del experimento evaluado. Por ejemplo: Pocoyó y sus amigos meten varios juguetes en una caja: un carro, un oso, una pelota y un robot. Luego sacan uno sin mirar. Los posibles resultados son: S = {carro, oso, pelota, robot}. ¡Esa lista completa es el Espacio Muestral!.`;
 
-function calcularFactorial() {
-    let n = parseInt(document.getElementById("numero").value);
-    let resultadoDiv = document.getElementById("resultado");
-
-    if (isNaN(n) || n < 0) {
-        resultadoDiv.innerHTML = "⚠️ Ingresa un número entero positivo.";
-        return;
+    let utterance;
+    if ('speechSynthesis' in window) {
+        utterance = new SpeechSynthesisUtterance(definitionText);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.9;
+        utterance.pitch = 1.1;
+        utterance.volume = 0.7;
     }
 
-    if (n === 0) {
-        resultadoDiv.innerHTML = "0! = 1";
-        return;
+    // Controles de audio
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const muteBtn = document.getElementById('muteBtn');
+    const audioPanel = document.getElementById('audioPanel');
+    let isPlaying = false;
+    let isMuted = false;
+    let previousVolume = 0.7;
+
+    if (utterance) {
+        utterance.onend = function() {
+            isPlaying = false;
+            playPauseBtn.textContent = '▶️';
+        };
     }
 
-    let factorial = 1;
-    let procedimiento = n + "! = ";
-
-    for (let i = n; i >= 1; i--) {
-        factorial *= i;
-        procedimiento += i;
-        if (i > 1) procedimiento += " × ";
-    }
-
-    procedimiento += " = " + factorial;
-
-    resultadoDiv.innerHTML = procedimiento;
-}
-
-
-// 🎤 VOZ MASCULINA ESPAÑOL COLOMBIA
-function leerDefinicion() {
-
-    let texto = document.getElementById("definicion").innerText;
-
-    // Corregir pronunciación
-    texto = texto.replace(/factorial/gi, "factoriál");
-
-    hablar(texto);
-}
-
-
-function leerCeroFactorial() {
-
-    let texto = `
-    Cero factoriál es igual a uno.
-    Se define así para que las fórmulas matemáticas funcionen correctamente.
-    Si no tenemos elementos para ordenar, existe exactamente una forma de no ordenar nada.
-    `;
-
-    hablar(texto);
-}
-
-
-function hablar(texto) {
-
-    let mensaje = new SpeechSynthesisUtterance(texto);
-
-    let voces = speechSynthesis.getVoices();
-    let vozSeleccionada = null;
-
-    // Buscar voz español Colombia
-    for (let i = 0; i < voces.length; i++) {
-        if (voces[i].lang === "es-CO") {
-            vozSeleccionada = voces[i];
-            break;
+    playPauseBtn.addEventListener('click', () => {
+        if (!window.speechSynthesis) return;
+        if (isPlaying) {
+            window.speechSynthesis.cancel();
+            isPlaying = false;
+            playPauseBtn.textContent = '▶️';
+        } else {
+            const newUtterance = new SpeechSynthesisUtterance(definitionText);
+            newUtterance.lang = 'es-ES';
+            newUtterance.rate = 0.9;
+            newUtterance.pitch = 1.1;
+            newUtterance.volume = utterance.volume;
+            newUtterance.onend = () => {
+                isPlaying = false;
+                playPauseBtn.textContent = '▶️';
+            };
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(newUtterance);
+            utterance = newUtterance;
+            isPlaying = true;
+            playPauseBtn.textContent = '⏸️';
         }
-    }
+    });
 
-    // Si no encuentra es-CO, usar cualquier español
-    if (!vozSeleccionada) {
-        for (let i = 0; i < voces.length; i++) {
-            if (voces[i].lang.includes("es")) {
-                vozSeleccionada = voces[i];
-                break;
+    volumeSlider.addEventListener('input', (e) => {
+        const vol = parseFloat(e.target.value);
+        if (utterance) utterance.volume = vol;
+        if (!isMuted) previousVolume = vol;
+        muteBtn.textContent = vol === 0 ? '🔇' : (vol < 0.5 ? '🔈' : '🔊');
+    });
+
+    muteBtn.addEventListener('click', () => {
+        if (!utterance) return;
+        if (isMuted) {
+            utterance.volume = previousVolume;
+            volumeSlider.value = previousVolume;
+            muteBtn.textContent = previousVolume === 0 ? '🔇' : (previousVolume < 0.5 ? '🔈' : '🔊');
+            isMuted = false;
+        } else {
+            previousVolume = utterance.volume;
+            utterance.volume = 0;
+            volumeSlider.value = 0;
+            muteBtn.textContent = '🔇';
+            isMuted = true;
+        }
+    });
+
+    // Función ir a inicio
+    window.goToHome = function() {
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        isPlaying = false;
+        playPauseBtn.textContent = '▶️';
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-0').classList.add('active');
+        current = 0;
+        canMove = false;
+        document.getElementById('nav-area').style.display = 'flex';
+        document.body.style.backgroundColor = "#f0f9ff";
+        update();
+        toggleAudioPanel(0);
+    };
+
+    function toggleAudioPanel(pageIndex) {
+        if (pageIndex === 0) {
+            audioPanel.classList.add('visible');
+        } else {
+            audioPanel.classList.remove('visible');
+            if (isPlaying && window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+                isPlaying = false;
+                playPauseBtn.textContent = '▶️';
             }
         }
     }
 
-    mensaje.voice = vozSeleccionada;
-    mensaje.lang = "es-CO";
+    // Imágenes personajes
+    const imgElly = "https://cdn.prod.website-files.com/662fb92f905585b61b12afd8/66632b8a61d0ffd9308dd729_characters_elly.webp";
+    const imgNina = "https://i0.wp.com/eltallerdehector.com/wp-content/uploads/2022/06/8440a-nina-pocoyo-png.png?resize=800%2C800&ssl=1";
+    const imgPato = "https://i0.wp.com/eltallerdehector.com/wp-content/uploads/2022/06/3797e-pato-de-pocoyo-png.png?fit=1000%2C1000&ssl=1";
+    const imgPocoyoPajaroto = "https://pbs.twimg.com/media/CmGz8YdXEAAsUwK.jpg";
+    const imgPocoyoSolo = "https://tse1.explicit.bing.net/th/id/OIP.UyiIP30MuuZSblJgDU_qDQHaJ_?rs=1&pid=ImgDetMain&o=7&rm=3";
 
-    // Configuración voz masculina juvenil
-    mensaje.rate = 1.05;
-    mensaje.pitch = 1.1;
+    const rawData = [
+        { char: imgPocoyoSolo, name: "Pocoyó", q: "Pocoyó desea lanzar UNA moneda. ¿Cuál es el espacio muestral?", correct: "S = {Cara, Sello}", wrong: "S = {Cara}", color: "#e3f2fd", imgC: "https://i.postimg.cc/jDXC0Bg5/poco.jpg", imgW: "https://i.postimg.cc/0zfrRhWz/poco1.jpg", explOk: "¡Muy bien! Una moneda tiene dos lados: cara y sello.", explNo: "¡Cuidado! El espacio muestral debe incluir todos los resultados posibles, te falta el sello." },
+        { char: imgPato, name: "Pato", q: "Pato quiere lanzar un DADO de 6 caras. ¿Qué números podría  obtener?", correct: "S = {1, 2, 3, 4, 5, 6}", wrong: "S = {1, 2, 3, 8}", color: "#fffde7", imgC: "https://i.postimg.cc/CRNdT9Pz/poco2.jpg", imgW: "https://i.postimg.cc/CRNdT9Pz/poco2.jpg", explOk: "¡Excelente! El dado de Pato solo tiene números del 1 al 6.", explNo: "¡Oh no! Te faltan números. Además el dado de Pato solo tiene 6 caras. El espacio muestral debe ser completo." },
+        { char: imgElly, name: "Elly", q: "Elly tiene una caja con 3 bolas (Roja, Azul, Verde). Decide sacar una al azar para jugar con Pato y Pocoyó ¿qué colores de pelotas podría obtener?.", correct: "S = {Roja, Azul, Verde}", wrong: "S = {Roja, Amarilla y Rosa}", color: "#fce4ec", imgC: "https://i.postimg.cc/t7BQnnk2/po1.jpg", imgW: "https://i.postimg.cc/5jsdQQgk/po3.jpg", explOk: "¡Correcto! Los resultados posibles son los colores que hay dentro de la caja.", explNo: "¡Error! No hay ninguna bola amarilla ni rosa en la caja, así que no pueden ser parte del espacio muestral." },
+        { isLesson: true }, 
+        { char: imgNina, name: "Nina", q: "Nina quiere lanzar UNA moneda DOS veces, ¿qué resultados podría obtener Nina, teniendo en cuenta que representamos la cara con la letra C y el sello con la letra S?.", correct: "S = {(C,C), (C,S), (S,C), (S,S)}", wrong: "S = {(C,C), (S,S)}", color: "#e8f5e9", imgC: "https://i.postimg.cc/jDXC0Bg5/poco.jpg", imgW: "https://i.postimg.cc/jDXC0Bg5/poco.jpg", explOk: "¡Fantástico! Al lanzar dos veces, tenemos 4 combinaciones y 4 pares ordenados posibles.", explNo: "¡Te faltan opciones! También puede salir Cara en la primera y Sello en la segunda, o al revés." },
+        { char: imgPocoyoPajaroto, name: "Pocoyó y Pajaroto", q: "Pocoyó tiene un dado y Pajaroto también tiene uno, ambos de 6 caras y desean tirarlos para jugar. ¿Cuántos resultados posibles hay al lanzar los DOS dados al misto tiempo?", correct: "36 resultados", wrong: "12 resultados", color: "#bbdefb", imgC: "https://i.postimg.cc/CRNdT9Pz/poco2.jpg", imgW: "https://i.postimg.cc/CRNdT9Pz/poco2.jpg", explOk: "¡Así es! Como cada dado tiene 6 caras, multiplicamos 6 x 6 = 36.", explNo: "¡Cuidado! No es 6 + 6, se deben combinar todas las caras: 6 x 6 para lograr obtener el espacio muestral." },
+        { char: imgPato, name: "Pato", q: "Pato Lanza una MONEDA y Nina un DADO al mismo tiempo y juegan a adivinar el resultado ¿Cuantós resultados posibles podrían obtener?.", correct: "S = {(C,1), (C,2),(C,3),(C,4),(C,5),(C,6),(S,1),(S,2),(S,3),(S,4),(S,5),(S,6)} (12 total)", wrong: "S = {C, S, 1, 2, 3, 4, 5, 6} ( 8 total)", color: "#fff9c4", imgC: "https://i.postimg.cc/xq6DNN57/po5.jpg", imgW: "https://i.postimg.cc/xq6DNN57/po5.jpg", explOk: "¡Bien hecho! Combinamos los 2 espacios muestrales de la moneda con los 6 del dado (2x6=12).", explNo: "¡No! Debes formar parejas con los resultados, no solo listarlos por separado." },
+        { char: imgElly, name: "Elly", q: "Elly tiene una bolsa que contiene unos cubos con los numeros {1, 2, 3} y desea  Sacar DOS sin reemplazo ¿Cuantas combinaciones posibles podría hacer?.", correct: "S = {(1,2), (1,3), (2,1), (2,3), (3,1), (3,2)}", wrong: "S = {(1,1), (2,2), (3,3), (1,3), (2,6)}", color: "#f8bbd0", imgC: "https://i.postimg.cc/6yTsr6bP/po6.jpg", imgW: "https://i.postimg.cc/kBDrQMYs/po4.jpg", explOk: "¡Perfecto! Al no haber reemplazo, no puedes sacar el mismo número dos veces.", explNo: "¡Incorrecto! Si no devuelves el cubo, no puede salir el mismo número dos veces (como 1,1) y el 6 no hace parte de los cubos de Elly." },
+        { char: imgNina, name: "Nina", q: "Si Nina lanza un dado de 8 caras, ¿que resultados podría obtener?", correct: "(4, 7)", wrong: "(2, 13)", color: "#c8e6c9", imgC: "https://i.postimg.cc/WhtRGpYB/po10.jpg", imgW: "https://i.postimg.cc/WhtRGpYB/po10.jpg", explOk: "¡Correcto! Ambos números 4 y el 7 están en el dado.", explNo: "¡Imposible! El número 13 no existe en un dado de 8 caras." },
+        { char: imgPocoyoSolo, name: "Pocoyó", q: "Pocoyó juega al restaurante con sus amigos y decide hacer un pequeño MENÚ en el tiene 3 platos de comida diferentes, 2 jugos y 2 postres deliciosos. ¿Cuantas combinaciones podrían hacer sus amigos al hacer sus pedidos?", correct: "12 Combinaciones", wrong: "7 Combinaciones", color: "#e1f5fe", imgC: "https://i.postimg.cc/mthxYZp0/po9.jpg", imgW: "https://i.postimg.cc/yWL433jG/po2.jpg", explOk: "¡Exacto! Multiplicamos todas las opciones: 2 x 3 x 2 = 12 y este sería nuestro espacio muestral.", explNo: "¡Error! No se suman las opciones, se deben multiplicar para hallar el total de combinaciones." },
+        { char: imgPato, name: "Pato", q: "Pato decide hacer una rifa para ganarse un juguete de dinosaurio donde sus amigos deberán escoger una letra {A,B,C} y un número {1,2,3,4} ¿Cuantas combinaciones podrá usar Pato para realizar su rifa?.", correct: "12 combinaciones posibles", wrong: "7 combinaciones posibles", color: "#fffde7", imgC: "https://i.postimg.cc/qzgfsBDb/po7.jpg", imgW: "https://i.postimg.cc/zV3mCD2M/po8.jpg", explOk: "¡Lo lograste! 3 letras multiplicado por 4 números nos da 12 parejas posibles.", explNo: "¡Cuidado! Recuerda multiplicar el número de letras (3) por el número de números (4)." }
+    ];
 
-    speechSynthesis.speak(mensaje);
-}
+    let current = 0;
+    let canMove = false;
 
+    function render() {
+        const cont = document.getElementById('exercises-container');
+        rawData.forEach((ex, i) => {
+            const d = document.createElement('div');
+            d.id = `page-${i+1}`; 
+            d.className = "page";
+            if (ex.isLesson) {
+                d.innerHTML = `
+                    <img src="${imgElly}" class="character-img" style="max-width:130px;">
+                    <h2 style="color:var(--elly-pink); font-size:1.3rem;">¡Aprendamos a Juntar Espacios!</h2>
+                    <div class="lesson-box">
+                        <p>Cuando realizamos <b>dos experimentos al mismo tiempo</b>,el número total de los resultados se obtiene multiplicando los resultados de CADA UNO</p>
+                        <p style="text-align:center; font-size:1.1rem;"><b>A x B = Total de resultados</b></p>
+                        <p>Ejemplo: Moneda (2) x Dado (6) = <b>12 resultados posibles.</b>.</p>
+                        <p>Se escriben como parejas: (Cara, 1), (Cara, 2)(Cara,3)...</p>
+                    </div>
+                    <p><i>¡Prepárate para los niveles difíciles!</i></p>
+                `;
+            } else {
+                const isCorrectLeft = Math.random() > 0.5;
+                const opt1 = isCorrectLeft ? ex.correct : ex.wrong;
+                const opt2 = isCorrectLeft ? ex.wrong : ex.correct;
+                const img1 = isCorrectLeft ? ex.imgC : ex.imgW;
+                const img2 = isCorrectLeft ? ex.imgW : ex.imgC;
 
-// ✅ Verificación ejercicios
-function verificar1(){
-    let valor = document.getElementById("ej1").value;
-    document.getElementById("r1").innerHTML =
-        valor == 120 ? "<span class='correcto'>✔ Correcto 🎉</span>"
-        : "<span class='incorrecto'>❌ Incorrecto</span>";
-}
+                d.innerHTML = `
+                    <img src="${ex.char}" class="character-img" style="max-width:130px;">
+                    <h3 style="margin:5px 0;">Reto de ${ex.name}</h3>
+                    <p style="font-size:0.95rem"><b>${ex.q}</b></p>
+                    <div class="options-grid">
+                        <div class="option-card" onclick="check(${i}, '${opt1.replace(/'/g, "\\'")}', '${ex.correct.replace(/'/g, "\\'")}', '${ex.explOk.replace(/'/g, "\\'")}', '${ex.explNo.replace(/'/g, "\\'")}')">
+                            <img src="${img1}"><p><b>${opt1}</b></p>
+                        </div>
+                        <div class="option-card" onclick="check(${i}, '${opt2.replace(/'/g, "\\'")}', '${ex.correct.replace(/'/g, "\\'")}', '${ex.explOk.replace(/'/g, "\\'")}', '${ex.explNo.replace(/'/g, "\\'")}')">
+                            <img src="${img2}"><p><b>${opt2}</b></p>
+                        </div>
+                    </div>
+                    <div id="fb-${i}" class="feedback-box">
+                        <strong id="msg-${i}"></strong><br>
+                        <span id="expl-text-${i}"></span>
+                    </div>
+                `;
+            }
+            cont.appendChild(d);
+        });
+    }
 
-function verificar2(){
-    let valor = document.getElementById("ej2").value;
-    document.getElementById("r2").innerHTML =
-        valor == 6 ? "<span class='correcto'>✔ Correcto 🎉</span>"
-        : "<span class='incorrecto'>❌ Incorrecto</span>";
-}
+    window.check = function(eIdx, selected, correct, explOk, explNo) {
+        const box = document.getElementById(`fb-${eIdx}`);
+        const msg = document.getElementById(`msg-${eIdx}`);
+        const text = document.getElementById(`expl-text-${eIdx}`);
+        const isOk = (selected === correct);
+        
+        box.style.display = "block";
+        if(isOk) {
+            document.getElementById('snd-ok').play();
+            msg.innerText = "✅ ¡EXCELENTE!";
+            text.innerText = explOk;
+            box.style.backgroundColor = "#d4edda";
+            box.style.borderColor = "#28a745";
+            canMove = true;
+        } else {
+            document.getElementById('snd-no').play();
+            msg.innerText = "❌ ¡INTÉNTALO OTRA VEZ!";
+            text.innerText = explNo;
+            box.style.backgroundColor = "#f8d7da";
+            box.style.borderColor = "#dc3545";
+            canMove = false;
+        }
+        update();
+    };
 
-function verificar3(){
-    let valor = document.getElementById("ej3").value;
-    document.getElementById("r3").innerHTML =
-        valor == 1 ? "<span class='correcto'>✔ Correcto 🎉</span>"
-        : "<span class='incorrecto'>❌ Incorrecto</span>";
-}
+    function changePage(s) {
+        const totalPages = rawData.length;
+        document.getElementById(`page-${current}`).classList.remove('active');
+        current += s;
+        if (current > totalPages) {
+            document.getElementById('page-final').classList.add('active');
+            document.getElementById('nav-area').style.display = "flex";
+            document.body.style.backgroundColor = "#e1f5fe";
+            toggleAudioPanel(-1);
+        } else if (current === 0) {
+            document.getElementById('page-0').classList.add('active');
+            document.body.style.backgroundColor = "#f0f9ff";
+            toggleAudioPanel(0);
+        } else {
+            document.getElementById(`page-${current}`).classList.add('active');
+            const pageData = rawData[current-1];
+            canMove = (pageData && pageData.isLesson);
+            if (pageData && pageData.color) document.body.style.backgroundColor = pageData.color;
+            else document.body.style.backgroundColor = "#fff";
+            toggleAudioPanel(-1);
+        }
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        isPlaying = false;
+        playPauseBtn.textContent = '▶️';
+        window.scrollTo(0,0);
+        update();
+    }
 
+    function update() {
+        document.getElementById('prevBtn').disabled = (current === 0);
+        const next = document.getElementById('nextBtn');
+        const totalPages = rawData.length;
+        next.innerText = (current === 0) ? "¡Empezar! ➡" : (current === totalPages ? "¡Terminar!" : "Siguiente ➡");
+        next.disabled = !canMove && current !== 0 && current <= totalPages;
+    }
+
+    render();
+    update();
+    toggleAudioPanel(0);
 </script>
-
 </body>
-
 </html>
